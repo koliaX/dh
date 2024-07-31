@@ -11,7 +11,7 @@ local serv = Window:AddFolder"Server"
 local tweenservice = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
-local jsonen = true
+local jsonen = false
 
 local plrs = game.Players
 local lp = plrs.LocalPlayer
