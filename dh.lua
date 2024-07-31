@@ -56,7 +56,7 @@ function pllistupd()
 end
 
 local function quedh()
-	queue_on_teleport('local autoexec = true'..game:HttpGet("https://raw.githubusercontent.com/koliaX/dh/main/dh.lua"))
+	queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/koliaX/dh/main/dh.lua"))
 end
 
 
