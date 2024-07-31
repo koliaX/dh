@@ -12,6 +12,7 @@ local tweenservice = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
 local jsonen = false
+local autoexec = true
 
 local plrs = game.Players
 local lp = plrs.LocalPlayer
