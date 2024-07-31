@@ -54,6 +54,10 @@ function pllistupd()
 	end
 end
 
+local function quedh()
+	queue_on_teleport('local autoexec = true'..game:HttpGet("https://raw.githubusercontent.com/koliaX/dh/main/dh.lua"))
+end
+
 
 	local function flystart()
 		spawn(function ()
@@ -172,6 +176,9 @@ end})
 
 --
 local selserv = game.JobId
+serv:AddButton({text = "Auto execution", flag = "button", callback = function()
+	quedh()
+end})
 serv:AddButton({text = "Join to server (Server id box)", flag = "button", callback = function()
 	TeleportService:TeleportToPlaceInstance(game.PlaceId, selserv, lp)
 end})
@@ -208,6 +215,9 @@ Library:Init()
 pllistupd()
 if jsonen then
 	serversupd()
+end
+if autoexec then
+	quedh()
 end
 
 -- serversupd()
