@@ -1,6 +1,11 @@
+local git = true
+local Library
+if git then
+	Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/koliaX/allrequired/main/kxguilib.lua"))()
+else
+	Library = loadstring(readfile('kxguilib/kxguilib.lua'))()
+end
 
-
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/koliaX/allrequired/main/kxguilib.lua"))()
 
 local Window = Library:CreateWindow("Main")
 
@@ -12,7 +17,6 @@ local tweenservice = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 
 local jsonen = false
-local autoexec = true
 
 local plrs = game.Players
 local lp = plrs.LocalPlayer
@@ -32,6 +36,7 @@ local flyen = false
 local dsc
 local depr = {['rbxassetid://14398795317']=true,['rbxassetid://14398798790']=true}
 local autoparry = false
+local origname = false
 
 function tpt(targ)
 	if twtp == false then
@@ -53,14 +58,16 @@ end
 function pllistupd()
 	pllist:Clear()
 	for i,v in pairs(game.Players:GetPlayers()) do
-		pllist:AddValue(v)
+		if origname then
+			pllist:AddValue(v)
+		else
+			pllist:AddValue(v,v.Character:GetAttribute("Name"))
+		end
 	end
 end
-
 local function quedh()
 	queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/koliaX/dh/main/dh.lua"))
 end
-
 
 	local function flystart()
 		spawn(function ()
@@ -133,6 +140,9 @@ plys:AddToggle({text = "Safe tp", flag = "toggle", state = false, callback = fun
 
 --
 
+plys:AddToggle({text = "Display original name", flag = "toggle", state = false, callback = function(a)
+	origname = a
+end})
 pllist = plys:AddList({text = "Player", flag = "list", value = '',values = '', callback = function(a) 
 	ptarget = a 
 	pllistupd() 
@@ -141,17 +151,20 @@ end})
 
 plys:AddButton({text = "TP to target", flag = "button", callback = function() tpt(ptarget.Character.HumanoidRootPart.CFrame) end})
 plys:AddButton({text = "TP to Muzan (inf castle)", flag = "button", callback = function() tpt(CFrame.new(-3.5478880405426025, 365.1489562988281, 389.9491271972656)) end})
-dan:AddToggle({text = "Auto parry", flag = "toggle", state = false, callback = function(a)
+
+plys:AddToggle({text = "Auto parry", flag = "toggle", state = false, callback = function(a)
 	autoparry = a
 	if autoparry then
 		while autoparry do
-			for i,v in ptarget.Character.Humanoid.Animator:GetPlayingAnimationTracks() do 
-				if not depr[v.Animation.AnimationId] and v.Length > 0.5 then
-					--print(v.Animation.AnimationId, v.Priority,v.Length)
-					if (v.Priority == Enum.AnimationPriority.Action or v.Priority == Enum.AnimationPriority.Action2)  then
-						print(v.Animation.AnimationId, v.Priority,v.Length)
-						--task.wait(v.Length-0.75)
-						game.ReplicatedStorage.EVENTS.Block:FireServer()
+			if (lp.Character.HumanoidRootPart.Position - ptarget.Character.HumanoidRootPart.Position ).Magnitude <10 then
+				for i,v in ptarget.Character.Humanoid.Animator:GetPlayingAnimationTracks() do 
+					if not depr[v.Animation.AnimationId] and v.Length > 0.5 then
+						--print(v.Animation.AnimationId, v.Priority,v.Length)
+						if (v.Priority == Enum.AnimationPriority.Action or v.Priority == Enum.AnimationPriority.Action2)  then
+							print(v.Animation.AnimationId, v.Priority,v.Length)
+							--task.wait(v.Length-0.75)
+							game.ReplicatedStorage.EVENTS.Block:FireServer()
+						end
 					end
 				end
 			end
@@ -192,15 +205,13 @@ dan:AddToggle({text = "Remove dodge sound", flag = "toggle", state = false, call
 			if child.Name == "Dash" or child.Name == "Jump" then child.Volume = 0 end end)
 	end
 end})
-
 serv:AddButton({text = "Immortality", flag = "button", callback = function()
 	game.ReplicatedStorage.playerEvents.dash:FireServer(false)
 end})
+
+
 --
 local selserv = game.JobId
-serv:AddButton({text = "Auto execution", flag = "button", callback = function()
-	quedh()
-end})
 serv:AddButton({text = "Join to server (Server id box)", flag = "button", callback = function()
 	TeleportService:TeleportToPlaceInstance(game.PlaceId, selserv, lp)
 end})
@@ -238,9 +249,7 @@ pllistupd()
 if jsonen then
 	serversupd()
 end
-if autoexec then
-	quedh()
-end
+quedh()
 
 -- serversupd()
 -- print("Toggle is currently:", Library.flags["toggle"])
