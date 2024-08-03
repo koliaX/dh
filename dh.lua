@@ -205,7 +205,7 @@ dan:AddToggle({text = "Remove dodge sound", flag = "toggle", state = false, call
 			if child.Name == "Dash" or child.Name == "Jump" then child.Volume = 0 end end)
 	end
 end})
-serv:AddButton({text = "Immortality", flag = "button", callback = function()
+dan:AddButton({text = "Immortality", flag = "button", callback = function()
 	game.ReplicatedStorage.playerEvents.dash:FireServer(false)
 end})
 
