@@ -1,4 +1,4 @@
-local git = true 
+local git = true
 local Library
 if git then
 	Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/koliaX/allrequired/main/kxguilib.lua"))()
