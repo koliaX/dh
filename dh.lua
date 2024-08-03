@@ -30,6 +30,8 @@ local autododge
 	local BV = nil
 local flyen = false
 local dsc
+local depr = {['rbxassetid://14398795317']=true,['rbxassetid://14398798790']=true}
+local autoparry = false
 
 function tpt(targ)
 	if twtp == false then
@@ -139,7 +141,24 @@ end})
 
 plys:AddButton({text = "TP to target", flag = "button", callback = function() tpt(ptarget.Character.HumanoidRootPart.CFrame) end})
 plys:AddButton({text = "TP to Muzan (inf castle)", flag = "button", callback = function() tpt(CFrame.new(-3.5478880405426025, 365.1489562988281, 389.9491271972656)) end})
-
+dan:AddToggle({text = "Auto parry", flag = "toggle", state = false, callback = function(a)
+	autoparry = a
+	if autoparry then
+		while autoparry do
+			for i,v in ptarget.Character.Humanoid.Animator:GetPlayingAnimationTracks() do 
+				if not depr[v.Animation.AnimationId] and v.Length > 0.5 then
+					--print(v.Animation.AnimationId, v.Priority,v.Length)
+					if (v.Priority == Enum.AnimationPriority.Action or v.Priority == Enum.AnimationPriority.Action2)  then
+						print(v.Animation.AnimationId, v.Priority,v.Length)
+						--task.wait(v.Length-0.75)
+						game.ReplicatedStorage.EVENTS.Block:FireServer()
+					end
+				end
+			end
+			task.wait(1/60)
+		end
+	end
+end})
 --
 
 
@@ -174,7 +193,9 @@ dan:AddToggle({text = "Remove dodge sound", flag = "toggle", state = false, call
 	end
 end})
 
-
+serv:AddButton({text = "Immortality", flag = "button", callback = function()
+	game.ReplicatedStorage.playerEvents.dash:FireServer(false)
+end})
 --
 local selserv = game.JobId
 serv:AddButton({text = "Auto execution", flag = "button", callback = function()
